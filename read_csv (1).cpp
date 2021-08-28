@@ -5,6 +5,24 @@
 
 using namespace std;
 
+int encontra(string avaliacao, string separator){
+    
+    int M = separator.length();
+    int N = avaliacao.length();
+    int j;
+
+    for (int i = 0; i <= N - M; i++) {
+        for (j = 0; j < M; j++)
+            if (avaliacao[i + j] != separator[j])
+                break;
+ 
+        if (j == M)
+            return i;
+    }
+ 
+    return -1;
+}
+
 int main(){
     fstream file;
     file.open("tripadvisor_hotel_reviews.csv", ios::in);
@@ -39,7 +57,8 @@ int main(){
         // Percorre a line inteira e troca as aspas por espaço em branco
         replace(avaliacao.begin(), avaliacao.end(), '"', ' ');
 
-        inicio_separator = avaliacao.find(separator);
+	inicio_separator = encontra(avaliacao, separator);
+
         // Pegar uma substring de 0 até onde começa o separador
         texto = avaliacao.substr(0, inicio_separator);
         // Apaga de 0 até onde termina o separador
