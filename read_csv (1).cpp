@@ -85,13 +85,13 @@ int main(){
 
     struct p
     {
-        char palavra[45000];
+        char palavra[1000];
     };
     
     
-    char string[45000];
+    char string[1000];
     int tmp;
-    p vetor[45000];
+    p vetor[1000];
     int j = 0;
 
     while (!feof(Vocabulario) && !ferror(Vocabulario)) {
@@ -110,6 +110,7 @@ int main(){
         
         string[i] = '\0'; 
         strcpy(vetor[j].palavra,string);
+        printf("%s\n",vetor[j].palavra);
         j++;
     }
 
