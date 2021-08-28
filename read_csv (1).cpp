@@ -109,7 +109,7 @@ int main(){
     nota3.close();
     nota4.close();
     nota5.close();
-/*
+
     //INICO DO SEGUNDO TOPICO DO TRABALHO
     FILE *Vocabulario;
     Vocabulario = fopen("tripadvisor_hotel_reviews.csv","r");
@@ -147,6 +147,6 @@ int main(){
 
 
     fclose(Vocabulario);
-*/
+
     return 0;
 }
