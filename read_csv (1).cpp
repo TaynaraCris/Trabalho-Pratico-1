@@ -23,6 +23,18 @@ int encontra(string avaliacao, string separator){
     return -1;
 }
 
+string replace(string avaliacao){
+
+    for(int i =  0; i < avaliacao.length(); i++){
+	if(avaliacao[i] == '"'){
+	   avaliacao[i] = ' ';
+	}
+    }
+    return avaliacao;
+
+}
+
+
 int main(){
     fstream file;
     file.open("tripadvisor_hotel_reviews.csv", ios::in);
@@ -55,7 +67,7 @@ int main(){
         getline(file, avaliacao);
 
         // Percorre a line inteira e troca as aspas por espaço em branco
-        replace(avaliacao.begin(), avaliacao.end(), '"', ' ');
+      	avaliacao = replace(avaliacao);
 
 	inicio_separator = encontra(avaliacao, separator);
 
@@ -97,7 +109,7 @@ int main(){
     nota3.close();
     nota4.close();
     nota5.close();
-
+/*
     //INICO DO SEGUNDO TOPICO DO TRABALHO
     FILE *Vocabulario;
     Vocabulario = fopen("tripadvisor_hotel_reviews.csv","r");
@@ -135,6 +147,6 @@ int main(){
 
 
     fclose(Vocabulario);
-
+*/
     return 0;
 }
