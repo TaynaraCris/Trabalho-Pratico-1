@@ -107,7 +107,7 @@ int main(){
 
 
 	for(int i = 0; i < texto.length(); i++){
-	    if(texto[i] == ',' || texto[i] == '.' || texto[i] == '-' || texto[i] == '_' || texto[i] == '!' || texto[i] == '?'){
+	    if(texto[i] == ',' || texto[i] == '.' || texto[i] == '-' || texto[i] == '_' || texto[i] == '!' || texto[i] == '?' || texto[i] == ';'){
 	       texto[i] = ' ';
 	    }
 	    else{
