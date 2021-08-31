@@ -45,8 +45,6 @@ string * get_tokens(string str){
      return tokens;
  }
 
-
-
 string replace(string avaliacao){
 
     for(int i =  0; i < avaliacao.length(); i++){
@@ -179,6 +177,7 @@ int main(){
      for ( int i = 0; i < 10; i++ ) {
          cout << tokens_nota_1[i]<< endl;
      }
+     cout << endl;
 
      while(getline(read_nota2, text_line)) {
          tokens_nota_2 = get_tokens(text_line);
@@ -187,6 +186,7 @@ int main(){
      for ( int i = 0; i < 10; i++ ) {
          cout << tokens_nota_2[i]<< endl;
      }
+     cout << endl;
 
      while(getline(read_nota3, text_line)) {
          tokens_nota_3 = get_tokens(text_line);
@@ -195,7 +195,8 @@ int main(){
      for ( int i = 0; i < 10; i++ ) {
          cout << tokens_nota_3[i]<< endl;
      }
-     
+     cout << endl;     
+
      while(getline(read_nota4, text_line)) {
          tokens_nota_4 = get_tokens(text_line);
      }
@@ -203,6 +204,8 @@ int main(){
      for ( int i = 0; i < 10; i++ ) {
          cout << tokens_nota_4[i]<< endl;
      }
+     cout << endl;
+
      while(getline(read_nota5, text_line)) {
          tokens_nota_5 = get_tokens(text_line);
      }
@@ -210,7 +213,7 @@ int main(){
      for ( int i = 0; i < 10; i++ ) {
          cout << tokens_nota_5[i]<< endl;
      }
- 
+     cout << endl; 
  
      read_nota1.close();
      read_nota2.close();
