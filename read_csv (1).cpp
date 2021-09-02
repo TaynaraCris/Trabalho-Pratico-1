@@ -22,29 +22,36 @@ int encontra(string avaliacao, string separator){
  
     return -1;
 }
-
-
-string * get_tokens(string str){
-     static string tokens[2000];
-     string s_token;
-     int cont = 0;
-     const char* separator = " ";
+ string * get_tokens(string file_name){
+      ifstream read_nota(file_name);
+      string text_line;
+  
+      string* tokens = new string[800000];
+      string s_token;
+      int cont = 0;
+      const char* separator = " ";
+  
+      while(getline(read_nota, text_line)) {
+  
+          char *token = strtok(const_cast<char*>(text_line.c_str()), separator);
+          while (token != nullptr)
+          {
+              s_token = string(token);
+              if (s_token.size() > 3){
+                  tokens[cont] = s_token;
+                  cont++;
+              }
+  
+              token = strtok(nullptr, separator);
+          }
+  
+      }
+  
+      read_nota.close();
+  
+      return tokens;
+  }
  
-     char *token = strtok(const_cast<char*>(str.c_str()), separator);
-     while (token != nullptr)
-     {
-         s_token = string(token);
-         if (s_token.size() > 3){
-             tokens[cont] = s_token;
-             cont++;
-         }
- 
-         token = strtok(nullptr, separator);
-     }
- 
-     return tokens;
- }
-
 string replace(string avaliacao){
 
     for(int i =  0; i < avaliacao.length(); i++){
@@ -83,6 +90,12 @@ int main(){
     int inicio_separator;
 
     string avaliacao;
+
+    int total_tokens_rate_1 = 0;
+    int total_tokens_rate_2 = 0;
+    int total_tokens_rate_3 = 0;
+    int total_tokens_rate_4 = 0;
+    int total_tokens_rate_5 = 0;
 
     while( file.good() ) {
         rate = "";
@@ -124,9 +137,7 @@ int main(){
 	}
 
         if(rate[0] == '1') {
-            // Escreve o textoo no arquivo
             nota1 << texto; 
-            // Escrevo uma quebra de line no arquivo
             nota1 << endl;
         }
 	else if(rate[0] == '2'){
@@ -154,72 +165,52 @@ int main(){
     nota4.close();
     nota5.close();
 
-    //Reopen files
-     ifstream read_nota1("Nota1.txt");
-     ifstream read_nota2("Nota2.txt");
-     ifstream read_nota3("Nota3.txt");
-     ifstream read_nota4("Nota4.txt");
-     ifstream read_nota5("Nota5.txt");
+    string text_line;
+    string * tokens_nota_1;
+    string * tokens_nota_2;
+    string * tokens_nota_3;
+    string * tokens_nota_4;
+    string * tokens_nota_5;
+    int cont;
+    
+    tokens_nota_1 = get_tokens("Nota1.txt");
+    tokens_nota_2 = get_tokens("Nota2.txt");
+    tokens_nota_3 = get_tokens("Nota3.txt");
+    tokens_nota_4 = get_tokens("Nota4.txt");
+    tokens_nota_5 = get_tokens("Nota5.txt");
 
-     string text_line;
-     string * tokens_nota_1;
-     string * tokens_nota_2;
-     string * tokens_nota_3;
-     string * tokens_nota_4;
-     string * tokens_nota_5;
-
-     int cont;
+// TESTEEEEEEE
  
-     while(getline(read_nota1, text_line)) {
-         tokens_nota_1 = get_tokens(text_line);
-     }
-
-     for ( int i = 0; i < 10; i++ ) {
-         cout << tokens_nota_1[i]<< endl;
-     }
-     cout << endl;
-
-     while(getline(read_nota2, text_line)) {
-         tokens_nota_2 = get_tokens(text_line);
-     }
-
-     for ( int i = 0; i < 10; i++ ) {
-         cout << tokens_nota_2[i]<< endl;
-     }
-     cout << endl;
-
-     while(getline(read_nota3, text_line)) {
-         tokens_nota_3 = get_tokens(text_line);
-     }
-
-     for ( int i = 0; i < 10; i++ ) {
-         cout << tokens_nota_3[i]<< endl;
-     }
-     cout << endl;     
-
-     while(getline(read_nota4, text_line)) {
-         tokens_nota_4 = get_tokens(text_line);
-     }
-
-     for ( int i = 0; i < 10; i++ ) {
-         cout << tokens_nota_4[i]<< endl;
-     }
-     cout << endl;
-
-     while(getline(read_nota5, text_line)) {
-         tokens_nota_5 = get_tokens(text_line);
-     }
-
-     for ( int i = 0; i < 10; i++ ) {
-         cout << tokens_nota_5[i]<< endl;
-     }
-     cout << endl; 
+     bool achou_1 = 0;
+     bool achou_2 = 0;
+     bool achou_3 = 0;
+     bool achou_4 = 0;
+     bool achou_5 = 0;
  
-     read_nota1.close();
-     read_nota2.close();
-     read_nota3.close();
-     read_nota4.close();
-     read_nota5.close();
-
+     for ( int i = 0; i < 800000; i++ ) {
+         if(tokens_nota_1[i] == "" && achou_1 == 0) {
+             cout << "O ultimo token da nota 1 foi na posição: " << i << endl;
+             achou_1 = 1;
+         }
+         if(tokens_nota_2[i] == "" && achou_2 == 0) {
+             cout << "O ultimo token da nota 2 foi na posição: " << i << endl;
+             achou_2 = 1;
+         }
+         if(tokens_nota_3[i] == "" && achou_3 == 0) {
+             cout << "O ultimo token da nota 3 foi na posição: " << i << endl;
+             achou_3 = 1;
+         }
+         if(tokens_nota_4[i] == "" && achou_4 == 0) {
+             cout << "O ultimo token da nota 4 foi na posição: " << i << endl;
+             achou_4 = 1;
+         }
+         if(tokens_nota_5[i] == "" && achou_5 == 0) {
+             cout << "O ultimo token da nota 5 foi na posição: " << i << endl;
+             achou_5 = 1;
+         }
+     }
+ 
+     // TESTEEEEEEE
+ 
     return 0;
 }
