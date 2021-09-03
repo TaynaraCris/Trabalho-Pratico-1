@@ -63,6 +63,28 @@ string replace(string avaliacao){
 
 }
 
+int* get_idf(string *termos,int tamVetor, string *termosCompara, int tamVetorCompara){
+    int* numDocsVetor = new int [tamVetor];
+
+    for (int i = 0; i < tamVetor; i++)
+    {
+        numDocsVetor[i] = 0;
+    }
+
+    for (int i = 0; i < tamVetor; i++){
+        for (int u = 0; u < tamVetorCompara; u++)
+        {
+            if(/*COMPARAÇÃO DE STRINGS AQUI*/){
+                numDocsVetor[i]++;
+                break;
+            }
+        }
+        
+    }
+
+    return numDocsVetor;    
+}
+
 
 int main(){
     fstream file;
@@ -179,38 +201,58 @@ int main(){
     tokens_nota_4 = get_tokens("Nota4.txt");
     tokens_nota_5 = get_tokens("Nota5.txt");
 
-// TESTEEEEEEE
+
  
      bool achou_1 = 0;
      bool achou_2 = 0;
      bool achou_3 = 0;
      bool achou_4 = 0;
      bool achou_5 = 0;
+
+     int num1;
+     int num2;
+     int num3;
+     int num4;   
+     int num5;
  
      for ( int i = 0; i < 800000; i++ ) {
          if(tokens_nota_1[i] == "" && achou_1 == 0) {
-             cout << "O ultimo token da nota 1 foi na posição: " << i << endl;
+             //cout << "O ultimo token da nota 1 foi na posição: " << i << endl;
              achou_1 = 1;
+             num1 = i;
          }
          if(tokens_nota_2[i] == "" && achou_2 == 0) {
-             cout << "O ultimo token da nota 2 foi na posição: " << i << endl;
+             //cout << "O ultimo token da nota 2 foi na posição: " << i << endl;
              achou_2 = 1;
+             num2 = i;
          }
          if(tokens_nota_3[i] == "" && achou_3 == 0) {
-             cout << "O ultimo token da nota 3 foi na posição: " << i << endl;
+             //cout << "O ultimo token da nota 3 foi na posição: " << i << endl;
              achou_3 = 1;
+             num3 = i;
          }
          if(tokens_nota_4[i] == "" && achou_4 == 0) {
-             cout << "O ultimo token da nota 4 foi na posição: " << i << endl;
+             //cout << "O ultimo token da nota 4 foi na posição: " << i << endl;
              achou_4 = 1;
+             num4 = i;
          }
          if(tokens_nota_5[i] == "" && achou_5 == 0) {
-             cout << "O ultimo token da nota 5 foi na posição: " << i << endl;
+             //cout << "O ultimo token da nota 5 foi na posição: " << i << endl;
              achou_5 = 1;
+             num5 = i;
          }
      }
- 
-     // TESTEEEEEEE
- 
+
+     
+    int * numDocsTermo1;
+
+    numDocsTermo1 = get_idf(tokens_nota_1, num1 , tokens_nota_2,num2); 
+
+    for (int i = 0; i < 10; i++)
+    {
+      cout << numDocsTermo1[i] << endl;
+    }
+    
+
     return 0;
 }
