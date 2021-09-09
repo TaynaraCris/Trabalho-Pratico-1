@@ -2,11 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 using namespace std;
 
 int encontra(string avaliacao, string separator){
-    
+
     int M = separator.length();
     int N = avaliacao.length();
     int j;
@@ -15,74 +16,186 @@ int encontra(string avaliacao, string separator){
         for (j = 0; j < M; j++)
             if (avaliacao[i + j] != separator[j])
                 break;
- 
+
         if (j == M)
             return i;
     }
- 
+
     return -1;
 }
- string * get_tokens(string file_name){
-      ifstream read_nota(file_name);
-      string text_line;
-  
-      string* tokens = new string[800000];
-      string s_token;
-      int cont = 0;
-      const char* separator = " ";
-  
-      while(getline(read_nota, text_line)) {
-  
-          char *token = strtok(const_cast<char*>(text_line.c_str()), separator);
-          while (token != nullptr)
-          {
-              s_token = string(token);
-              if (s_token.size() > 3){
-                  tokens[cont] = s_token;
-                  cont++;
-              }
-  
-              token = strtok(nullptr, separator);
-          }
-  
-      }
-  
-      read_nota.close();
-  
-      return tokens;
-  }
- 
-string replace(string avaliacao){
 
-    for(int i =  0; i < avaliacao.length(); i++){
-	if(avaliacao[i] == '"'){
-	   avaliacao[i] = ' ';
-	}
+string * get_tokens(string file_name){
+    ifstream read_nota(file_name);
+    string text_line;
+
+    ofstream todos_tokens;
+    if (file_name == "Nota1.txt") {
+        todos_tokens.open("todos_tokens.txt");
+    } else {
+        todos_tokens.open("todos_tokens.txt", std::ios_base::app);
     }
-    return avaliacao;
 
+    string* tokens = new string[800000];
+    string s_token;
+    int cont = 0;
+    const char* separator = " ";
+    bool ja_existe;
+
+    while(getline(read_nota, text_line)) {
+
+        char *token = strtok(const_cast<char*>(text_line.c_str()), separator);
+        while (token != nullptr)
+        {
+            s_token = string(token);
+            if (s_token.size() > 3){
+                todos_tokens << s_token << endl;
+                tokens[cont] = s_token;
+                cont++;
+            }
+
+            token = strtok(nullptr, separator);
+        }
+
+    }
+
+    read_nota.close();
+    todos_tokens.close();
+
+    return tokens;
 }
 
-int* get_idf(string *termos,int tamVetor, string *termosCompara, int tamVetorCompara){
-    int* numDocsVetor = new int [tamVetor];
+map<string, int> get_alltokens(){
+    ifstream todos_tokens("todos_tokens.txt");
+    string token;
+    map<string, int> dicionario;
 
-    for (int i = 0; i < tamVetor; i++)
-    {
-        numDocsVetor[i] = 0;
+    while(getline(todos_tokens, token)) {
+        if (dicionario[token]){
+            dicionario[token]++;
+        } else {
+            dicionario[token] = 1;
+        }
     }
 
-    for (int i = 0; i < tamVetor; i++){
-        for (int u = 0; u < tamVetorCompara; u++)
+    todos_tokens.close();
+
+    return dicionario;
+}
+
+int ehFinalPalavra(char pcar){
+    int i, ehfim = 0;
+    char fimPalavra[6] = {'\n', ' ', '.', ',', ';', ':'};
+    int TAMFIMPAL = 6;
+
+    for(i=0;i<TAMFIMPAL;i++){
+        if(pcar == fimPalavra[i]){
+            ehfim = 1;
+            break;
+        }
+    }
+    return ehfim;
+}
+
+int palavrasiguais(char *ppal1, char *ppal2){
+    int ppos = 0, pehigual = 1;
+    while((!ehFinalPalavra(ppal1[ppos])) && (!ehFinalPalavra(ppal2[ppos]))){
+        if(tolower(ppal1[ppos]) != tolower(ppal2[ppos])){
+            pehigual = 0;
+            break;
+        }
+        ppos++;
+    }
+    return pehigual;
+}
+
+int* calcula_idf(int *nDocumentos){
+    static int idf[1872508];
+    
+    for (int i= 0; i < 1872508; i++)
+    {
+        idf[i] = log10(5/nDocumentos[i]);
+    }
+    
+    return idf;
+}
+
+int* get_idf(map<string,int> vocabulario, string * nota1, string * nota2, string * nota3, string * nota4,string * nota5){
+    ifstream todos_tokens("todos_tokens.txt");
+    string palavra1;
+    int u = 0;
+    static int nDocumentos [1872508];
+    int *idf;
+    FILE *fp;
+    fp = fopen("todos_tokens.txt","r");
+    char *c;
+    
+    while(fgets(c,20,fp) != NULL){
+        
+        
+        nDocumentos[u] = 0;
+        
+        for(int i=0; i < 136549; i++){
+            char *n1 = const_cast <char*> (nota1[i].c_str());
+            if(palavrasiguais(c,n1)){
+                nDocumentos[u]++;
+                break;
+            }
+        }
+
+        for (int i = 0; i < 194339; i++)
         {
-            if(/*COMPARAÇÃO DE STRINGS AQUI*/){
-                numDocsVetor[i]++;
+           char *n2 = const_cast <char*> (nota2[i].c_str());
+           if(palavrasiguais(c,n2)){
+                nDocumentos[u]++;
+                break;
+            }
+        }
+
+        for (int i = 0; i < 215664; i++)
+        {
+             char *n3 = const_cast <char*> (nota3[i].c_str());
+             if(palavrasiguais(c,n3)){
+                nDocumentos[u]++;
+                break;
+            }
+        }
+
+        for (int i = 0; i < 569574; i++)
+        {
+            char *n4 = const_cast <char*> (nota4[i].c_str());
+            if(palavrasiguais(c,n4)){
+                nDocumentos[u]++;
                 break;
             }
         }
         
+        for (int i = 0; i < 756381; i++)
+        {
+            char *n5 = const_cast <char*> (nota5[i].c_str());
+            if(palavrasiguais(c,n5)){
+                nDocumentos[u]++;
+                break;
+            }
+        }
+        
+       u++; 
     }
+    fclose(fp);
 
-    return numDocsVetor;    
+    idf = calcula_idf(nDocumentos);
+
+    return idf;
+}
+
+string replace(string avaliacao){
+
+    for(int i =  0; i < avaliacao.length(); i++){
+        if(avaliacao[i] == '"'){
+            avaliacao[i] = ' ';
+        }
+    }
+    return avaliacao;
+
 }
 
 
@@ -105,6 +218,7 @@ int main(){
     ofstream nota5;
     nota5.open("Nota5.txt");
 
+
     string line;
     string texto = "", rate = "";
     string separator = ",   ,"; 
@@ -121,63 +235,63 @@ int main(){
 
     while( file.good() ) {
         rate = "";
-	texto = "";
+        texto = "";
 
-	// Pega uma line do arquivo
+        // Pega uma linha do arquivo
         getline(file, avaliacao);
 
-        // Percorre a line inteira e troca as aspas por espaço em branco
-      	avaliacao = replace(avaliacao);
+        // Percorre a linha inteira e troca as aspas por espaço em branco
+        avaliacao = replace(avaliacao);
 
-	inicio_separator = encontra(avaliacao, separator);
+        inicio_separator = encontra(avaliacao, separator);
 
-	for(int i = 0; i < inicio_separator; i++){
-	    texto += avaliacao[i];
-	}
-	for(int i = inicio_separator + separator.length(); i <= avaliacao.length(); i++){
-	    rate += avaliacao[i];
-	}
+        for(int i = 0; i < inicio_separator; i++){
+            texto += avaliacao[i];
+        }
+        for(int i = inicio_separator + separator.length(); i <= avaliacao.length(); i++){
+            rate += avaliacao[i];
+        }
 
 
-	for(int i = 0; i < texto.length(); i++){
-	    if(texto[i] == ',' || texto[i] == '.' || texto[i] == '-' || texto[i] == '_' || texto[i] == '!' || texto[i] == '?' || texto[i] == ';'
-	    || texto[i] == ':'){
-	       
-	    texto[i] = ' ';
-	    }
-	    else{
-	       texto[i] = texto[i];
-	    }
-	}
-	for(int i = 0; i < texto.length(); i++){
-	    if(texto[i] == ' ' && texto[i+1] == ' '){
-	       texto[i] = ' ';
-	    }
-	    else{
-	       texto[i] = texto[i];
-	    }
-	}
+        for(int i = 0; i < texto.length(); i++){
+            if(texto[i] == ',' || texto[i] == '.' || texto[i] == '-' || texto[i] == '_' || texto[i] == '!' || texto[i] == '?' || texto[i] == ';'
+                    || texto[i] == ':'){
+
+                texto[i] = ' ';
+            }
+            else{
+                texto[i] = texto[i];
+            }
+        }
+        for(int i = 0; i < texto.length(); i++){
+            if(texto[i] == ' ' && texto[i+1] == ' '){
+                texto[i] = ' ';
+            }
+            else{
+                texto[i] = texto[i];
+            }
+        }
 
         if(rate[0] == '1') {
             nota1 << texto; 
             nota1 << endl;
         }
-	else if(rate[0] == '2'){
-	    nota2 << texto;
-	    nota2 << endl;
-	}
-	else if(rate[0] == '3'){
-	    nota3 << texto;
-	    nota3 << endl;
-	}
-	else if(rate[0] == '4'){
-	    nota4 << texto;
-	    nota4 << endl;
-	}
-	else if(rate[0] == '5'){
-	    nota5 << texto;
-	    nota5 << endl;
-	}
+        else if(rate[0] == '2'){
+            nota2 << texto;
+            nota2 << endl;
+        }
+        else if(rate[0] == '3'){
+            nota3 << texto;
+            nota3 << endl;
+        }
+        else if(rate[0] == '4'){
+            nota4 << texto;
+            nota4 << endl;
+        }
+        else if(rate[0] == '5'){
+            nota5 << texto;
+            nota5 << endl;
+        }
     }
     file.close();
 
@@ -193,66 +307,72 @@ int main(){
     string * tokens_nota_3;
     string * tokens_nota_4;
     string * tokens_nota_5;
+    string * tokens_inteiro;
     int cont;
-    
+
     tokens_nota_1 = get_tokens("Nota1.txt");
     tokens_nota_2 = get_tokens("Nota2.txt");
     tokens_nota_3 = get_tokens("Nota3.txt");
     tokens_nota_4 = get_tokens("Nota4.txt");
     tokens_nota_5 = get_tokens("Nota5.txt");
+    map<string, int> dicionario = get_alltokens();
+    
+    
+    int * idf;
+    idf = get_idf(dicionario, tokens_nota_1,tokens_nota_2,tokens_nota_3,tokens_nota_4,tokens_nota_5);
+    
 
 
- 
+    /*PARA PRINTAR O DICIONARIO
+    for (auto elemento : dicionario){
+        cout << elemento.first << " " << elemento.second << endl;
+    }*/
+
+    // PARA ACESSAR O VALOR DA PALAVRA(A QUANTIDADE DE VEZES QUE ELA APARECEU)
+    // cout << dicionario['palavra'] << endl;
+    // int qt_palavra = dicionario['palavra'];
+
+
+ /*TESTEEEEEEE
+
      bool achou_1 = 0;
      bool achou_2 = 0;
      bool achou_3 = 0;
      bool achou_4 = 0;
      bool achou_5 = 0;
+     bool achou_6 = 0;
 
-     int num1;
-     int num2;
-     int num3;
-     int num4;   
-     int num5;
- 
      for ( int i = 0; i < 800000; i++ ) {
          if(tokens_nota_1[i] == "" && achou_1 == 0) {
-             //cout << "O ultimo token da nota 1 foi na posição: " << i << endl;
+             cout << "O ultimo token da nota 1 foi na posição: " << i << endl;
              achou_1 = 1;
-             num1 = i;
          }
          if(tokens_nota_2[i] == "" && achou_2 == 0) {
-             //cout << "O ultimo token da nota 2 foi na posição: " << i << endl;
+             cout << "O ultimo token da nota 2 foi na posição: " << i << endl;
              achou_2 = 1;
-             num2 = i;
          }
          if(tokens_nota_3[i] == "" && achou_3 == 0) {
-             //cout << "O ultimo token da nota 3 foi na posição: " << i << endl;
+             cout << "O ultimo token da nota 3 foi na posição: " << i << endl;
              achou_3 = 1;
-             num3 = i;
          }
          if(tokens_nota_4[i] == "" && achou_4 == 0) {
-             //cout << "O ultimo token da nota 4 foi na posição: " << i << endl;
+             cout << "O ultimo token da nota 4 foi na posição: " << i << endl;
              achou_4 = 1;
-             num4 = i;
          }
          if(tokens_nota_5[i] == "" && achou_5 == 0) {
-             //cout << "O ultimo token da nota 5 foi na posição: " << i << endl;
+             cout << "O ultimo token da nota 5 foi na posição: " << i << endl;
              achou_5 = 1;
-             num5 = i;
          }
      }
 
-     
-    int * numDocsTermo1;
+     for(int j = 0; j < 1872600; j++){
+         if(tokens_inteiro[j] == "" && achou_6 == 0) {
+             cout << "O último token do texto foi na posição: " << j << endl;
+             achou_6 = 1;
+         }
+     }
 
-    numDocsTermo1 = get_idf(tokens_nota_1, num1 , tokens_nota_2,num2); 
-
-    for (int i = 0; i < 10; i++)
-    {
-      cout << numDocsTermo1[i] << endl;
-    }
-    
+      TESTEEEEEEE*/
 
     return 0;
 }
