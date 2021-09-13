@@ -110,10 +110,10 @@ int palavrasiguais(char *ppal1, char *ppal2){
 
 
 
-int* get_idf(map<string,int> vocabulario, string * nota1, string * nota2, string * nota3, string * nota4,string * nota5){
+double* get_idf(map<string,int> vocabulario, string * nota1, string * nota2, string * nota3, string * nota4,string * nota5){
    int u =0;
    static int nDocumentos[47124];
-   static int idf[47124];
+   static double idf[47124];
 
    for(auto it = vocabulario.begin(); it != vocabulario.end(); it++){
        char *c = const_cast <char*> (it->first.c_str());
@@ -173,6 +173,7 @@ int* get_idf(map<string,int> vocabulario, string * nota1, string * nota2, string
      
      for(int i=0; i < 47124 ; i++){
          idf[i] = log10(5/nDocumentos[i]);
+         printf("%f", idf[i]);
      }
 
     return idf;
@@ -307,7 +308,7 @@ int main(){
     map<string, int> dicionario = get_alltokens();
     
     
-    int * idf;
+    double* idf;
     idf = get_idf(dicionario, tokens_nota_1,tokens_nota_2,tokens_nota_3,tokens_nota_4,tokens_nota_5);
     
 
