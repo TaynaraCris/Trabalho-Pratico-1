@@ -6,7 +6,7 @@
 |Taynara Cristina Ribeiro Marcellos|21/1031833|
 |Lucas Pimentel Quintão|19/0016663|
 |Gian Medeiros Rosa|19/0055006|
-|Rafael Santana Gonçalves|190058820|
+|Rafael Santana Gonçalves|19/0058820|
 
 ## Trabalho pratico 1
 
